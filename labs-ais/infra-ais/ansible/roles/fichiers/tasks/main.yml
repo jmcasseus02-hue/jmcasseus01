@@ -1,0 +1,16 @@
+---
+- name: Installer Samba
+  apt: { name: [ samba, acl ], state: present }
+- name: Arborescence des partages
+  file: { path: "{{ item }}", state: directory, mode: '2770' }
+  loop:
+    - /srv/partages/commun
+    - /srv/partages/direction
+    - /srv/partages/administration
+    - /srv/partages/animation
+    - /srv/partages/accueil
+- name: Configuration des partages
+  template: { src: smb.conf.j2, dest: /etc/samba/smb.conf }
+  notify: redemarrer samba
+- name: Demarrer Samba
+  systemd: { name: smbd, enabled: yes, state: started }

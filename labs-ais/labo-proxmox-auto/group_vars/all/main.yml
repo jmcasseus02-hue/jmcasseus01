@@ -1,0 +1,66 @@
+---
+# ============================================================
+# Nœud Proxmox cible et connexion API
+# ============================================================
+pve_node: "pve-auto"        # à adapter au nom réel du nœud
+api_host: "192.168.1.83"    # IP ou FQDN de l'API Proxmox
+api_user: "ansible@pve!ansible-token"
+api_token_id: "ansible-token"
+# Le secret ne doit jamais être en clair : il vient d'un fichier
+# chiffré avec ansible-vault (group_vars/all/vault.yml)
+api_token_secret: "{{ vault_pve_api_token_secret }}"
+
+# ============================================================
+# Stockage Proxmox
+# ============================================================
+storage_images: "local-lvm"   # disques des VM et rootfs des conteneurs
+storage_template: "local"     # emplacement des templates cloud-init / CT
+
+# Modèle cloud-init de référence pour cloner les VM Debian.
+# Doit exister au préalable sur le nœud (qm importdisk + qm set,
+# étape encore manuelle car sans équivalent API direct).
+cloudinit_template_vmid: 9000
+cloudinit_template_name: "debian13-cloudinit-template"
+
+# ============================================================
+# Réseau : bridge unique, bascule VLAN via une seule variable
+# ============================================================
+network_bridge: "vmbr0"
+network_vlan: ""    # ex: "10" pour taguer toutes les interfaces en VLAN 10
+
+# ============================================================
+# Catalogue unique des ressources à déployer
+# Ajouter une VM ou un conteneur = ajouter une entrée ici,
+# aucune tâche à dupliquer.
+# ============================================================
+proxmox_vms:
+  - name: vm-deb-01
+    vmid: 101
+    cores: 2
+    memory: 2048
+    ip: "192.168.1.111/24"
+    gw: "192.168.1.1"
+  - name: vm-deb-02
+    vmid: 102
+    cores: 2
+    memory: 2048
+    ip: "192.168.1.112/24"
+    gw: "192.168.1.1"
+
+proxmox_cts:
+  - name: ct-alp-01
+    vmid: 201
+    cores: 1
+    memory: 512
+    disk_size: "4"
+    ip: "192.168.1.211/24"
+    gw: "192.168.1.1"
+    ostemplate: "local:vztmpl/alpine-3.20-default_20240606_amd64.tar.xz"
+  - name: ct-alp-02
+    vmid: 202
+    cores: 1
+    memory: 512
+    disk_size: "4"
+    ip: "192.168.1.212/24"
+    gw: "192.168.1.1"
+    ostemplate: "local:vztmpl/alpine-3.20-default_20240606_amd64.tar.xz"

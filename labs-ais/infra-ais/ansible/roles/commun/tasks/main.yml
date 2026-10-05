@@ -1,0 +1,17 @@
+---
+- name: Mettre a jour l'index des paquets
+  apt: { update_cache: yes, cache_valid_time: 3600 }
+- name: Installer les paquets de base
+  apt:
+    name: [ qemu-guest-agent, sudo, chrony, curl, gnupg, python3 ]
+    state: present
+- name: Fuseau horaire
+  community.general.timezone: { name: "{{ timezone }}" }
+- name: Activer l'agent invite
+  systemd: { name: qemu-guest-agent, enabled: yes, state: started }
+- name: Durcissement SSH — pas de mot de passe root
+  lineinfile:
+    path: /etc/ssh/sshd_config
+    regexp: '^#?PermitRootLogin'
+    line: 'PermitRootLogin prohibit-password'
+  notify: redemarrer ssh

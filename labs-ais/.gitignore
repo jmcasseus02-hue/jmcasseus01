@@ -1,0 +1,7 @@
+﻿# Secrets (ne jamais versionner)
+**/vault.yml
+**/secrets.yml
+*.tfstate
+*.tfstate.backup
+.terraform/
+*.retry

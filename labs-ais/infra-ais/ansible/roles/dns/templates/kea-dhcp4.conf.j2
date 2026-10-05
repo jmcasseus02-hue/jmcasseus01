@@ -1,0 +1,16 @@
+{
+  "Dhcp4": {
+    "interfaces-config": { "interfaces": [ "*" ] },
+    "valid-lifetime": 3600,
+    "subnet4": [
+      { "subnet": "10.19.22.0/24",
+        "pools": [ { "pool": "10.19.22.100 - 10.19.22.199" } ],
+        "option-data": [ { "name": "routers", "data": "10.19.22.1" },
+                         { "name": "domain-name-servers", "data": "{{ dns_interne }}" } ] },
+      { "subnet": "10.19.23.0/24",
+        "pools": [ { "pool": "10.19.23.100 - 10.19.23.199" } ],
+        "option-data": [ { "name": "routers", "data": "10.19.23.1" },
+                         { "name": "domain-name-servers", "data": "{{ dns_interne }}" } ] }
+    ]
+  }
+}

@@ -1,0 +1,16 @@
+---
+- name: Socle commun sur toutes les VM
+  hosts: riquet
+  roles: [ commun ]
+- name: Service DNS + DHCP (BIND9 / Kea)
+  hosts: dns
+  roles: [ dns ]
+- name: Controleur de domaine Samba AD
+  hosts: domaine
+  roles: [ domaine ]
+- name: Serveur de fichiers Samba
+  hosts: fichiers
+  roles: [ fichiers ]
+- name: Relais de supervision Zabbix
+  hosts: zabbix_proxy
+  roles: [ zabbix-proxy ]

@@ -1,0 +1,4 @@
+zone "{{ domaine_dns }}" {
+    type master;
+    file "/var/lib/bind/db.{{ domaine_dns }}";
+};

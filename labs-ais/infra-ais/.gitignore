@@ -1,0 +1,9 @@
+# OpenTofu
+opentofu/.terraform/
+opentofu/*.tfstate
+opentofu/*.tfstate.backup
+opentofu/.terraform.lock.hcl
+# Ansible
+ansible/inventory.generated.ini
+ansible/group_vars/secrets.yml
+*.retry

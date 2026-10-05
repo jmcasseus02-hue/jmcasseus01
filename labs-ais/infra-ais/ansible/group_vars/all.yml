@@ -1,0 +1,11 @@
+---
+timezone: "Europe/Paris"
+domaine_dns: "ad.espace19.org"
+realm: "AD.ESPACE19.ORG"
+netbios: "AD"
+reseau_serveurs: "10.19.21.0/24"
+passerelle: "10.19.21.1"
+dns_interne: "10.19.21.10"
+epn_zabbix_server: "10.19.11.20"
+# SECRETS dans un coffre chiffre (ansible-vault create group_vars/secrets.yml) :
+#   ad_admin_password: "..."

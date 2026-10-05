@@ -1,0 +1,14 @@
+---
+- name: Depot Zabbix 7.0
+  apt:
+    deb: https://repo.zabbix.com/zabbix/7.0/debian/pool/main/z/zabbix-release/zabbix-release_7.0-2+debian12_all.deb
+- name: Installer le proxy Zabbix (SQLite)
+  apt: { name: zabbix-proxy-sqlite3, state: present, update_cache: yes }
+- name: Pointer vers le serveur Zabbix de l'EPN
+  lineinfile:
+    path: /etc/zabbix/zabbix_proxy.conf
+    regexp: '^Server='
+    line: 'Server={{ epn_zabbix_server }}'
+  notify: redemarrer zabbix-proxy
+- name: Demarrer le proxy
+  systemd: { name: zabbix-proxy, enabled: yes, state: started }

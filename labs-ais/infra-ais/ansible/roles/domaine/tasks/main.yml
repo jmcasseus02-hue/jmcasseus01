@@ -1,0 +1,20 @@
+---
+# Le mot de passe admin vient du coffre : ad_admin_password (ansible-vault)
+- name: Installer Samba AD DC
+  apt: { name: [ samba, smbclient, krb5-config, winbind, dnsutils ], state: present }
+- name: Neutraliser smbd/nmbd/winbind par defaut
+  systemd: { name: "{{ item }}", enabled: no, state: stopped }
+  loop: [ smbd, nmbd, winbind ]
+  ignore_errors: yes
+- name: Retirer l'ancien smb.conf
+  command: mv /etc/samba/smb.conf /etc/samba/smb.conf.orig
+  args: { creates: /etc/samba/smb.conf.orig, removes: /etc/samba/smb.conf }
+- name: Provisionner le domaine (une seule fois)
+  command: >
+    samba-tool domain provision --use-rfc2307
+    --realm={{ realm }} --domain={{ netbios }}
+    --server-role=dc --dns-backend=SAMBA_INTERNAL
+    --adminpass='{{ ad_admin_password }}'
+  args: { creates: /etc/samba/smb.conf }
+- name: Activer samba-ad-dc
+  systemd: { name: samba-ad-dc, enabled: yes, state: started }

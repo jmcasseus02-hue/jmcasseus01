@@ -1,0 +1,16 @@
+[global]
+   workgroup = {{ netbios }}
+   security = ADS
+   realm = {{ realm }}
+   server signing = mandatory
+   vfs objects = acl_xattr
+
+[commun]
+   path = /srv/partages/commun
+   read only = no
+   valid users = @"{{ netbios }}\GG_commun"
+
+[direction]
+   path = /srv/partages/direction
+   read only = no
+   valid users = @"{{ netbios }}\GG_direction"

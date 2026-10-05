@@ -1,0 +1,5 @@
+---
+- name: recharger bind
+  systemd: { name: named, state: reloaded }
+- name: redemarrer kea
+  systemd: { name: kea-dhcp4-server, state: restarted }

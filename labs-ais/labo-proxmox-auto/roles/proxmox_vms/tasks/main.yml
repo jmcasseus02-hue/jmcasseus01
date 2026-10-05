@@ -1,0 +1,65 @@
+---
+# Construction de la chaîne net0 par simple concaténation de texte.
+# (Piège déjà rencontré sur ce labo : un filtre Jinja de type union()
+# réordonne les éléments car il traite la liste comme un ensemble,
+# ce qui casse le format positionnel attendu par Proxmox :
+# "virtio,bridge=vmbr0" et non "bridge=vmbr0,virtio".)
+- name: Calculer la chaîne réseau net0 (avec ou sans tag VLAN)
+  ansible.builtin.set_fact:
+    net0_string: >-
+      {{ 'virtio,bridge=' ~ network_bridge ~
+         (',tag=' ~ network_vlan if network_vlan | length > 0 else '') }}
+
+- name: Cloner chaque VM à partir du modèle cloud-init
+  community.proxmox.proxmox_kvm:
+    api_host: "{{ api_host }}"
+    api_user: "{{ api_user }}"
+    api_token_id: "{{ api_token_id }}"
+    api_token_secret: "{{ api_token_secret }}"
+    node: "{{ pve_node }}"
+    clone: "{{ cloudinit_template_name }}"
+    vmid: "{{ cloudinit_template_vmid }}"
+    newid: "{{ item.vmid }}"
+    name: "{{ item.name }}"
+    storage: "{{ storage_images }}"
+    full: true
+    timeout: 300
+  loop: "{{ proxmox_vms }}"
+  loop_control:
+    label: "{{ item.name }}"
+  register: vm_clone
+  # Idempotence : si le vmid existe déjà, le module ne recrée rien
+  # (il renverra changed=false), le clonage n'est donc pas rejoué
+  # à chaque exécution du playbook.
+
+- name: Appliquer CPU, mémoire, réseau et cloud-init à chaque VM
+  community.proxmox.proxmox_kvm:
+    api_host: "{{ api_host }}"
+    api_user: "{{ api_user }}"
+    api_token_id: "{{ api_token_id }}"
+    api_token_secret: "{{ api_token_secret }}"
+    node: "{{ pve_node }}"
+    vmid: "{{ item.vmid }}"
+    update: true
+    cores: "{{ item.cores }}"
+    memory: "{{ item.memory }}"
+    net:
+      net0: "{{ net0_string }}"
+    ipconfig:
+      ipconfig0: "ip={{ item.ip }},gw={{ item.gw }}"
+  loop: "{{ proxmox_vms }}"
+  loop_control:
+    label: "{{ item.name }}"
+
+- name: Démarrer les VM
+  community.proxmox.proxmox_kvm:
+    api_host: "{{ api_host }}"
+    api_user: "{{ api_user }}"
+    api_token_id: "{{ api_token_id }}"
+    api_token_secret: "{{ api_token_secret }}"
+    node: "{{ pve_node }}"
+    vmid: "{{ item.vmid }}"
+    state: started
+  loop: "{{ proxmox_vms }}"
+  loop_control:
+    label: "{{ item.name }}"

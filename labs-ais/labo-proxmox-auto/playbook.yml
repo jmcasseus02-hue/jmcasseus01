@@ -1,0 +1,9 @@
+---
+- name: Déploiement automatisé de 2 VM Debian et 2 conteneurs Alpine
+  hosts: localhost
+  gather_facts: false
+  vars_files:
+    - group_vars/all/vault.yml   # secret du token API, chiffré (ansible-vault)
+  roles:
+    - proxmox_vms
+    - proxmox_cts

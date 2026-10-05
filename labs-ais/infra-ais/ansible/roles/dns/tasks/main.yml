@@ -1,0 +1,15 @@
+---
+- name: Installer BIND9 et Kea
+  apt: { name: [ bind9, bind9utils, kea-dhcp4-server ], state: present }
+- name: Zone interne — declaration
+  template: { src: named.conf.local.j2, dest: /etc/bind/named.conf.local }
+  notify: recharger bind
+- name: Zone interne — fichier de zone
+  template: { src: db.interne.j2, dest: "/var/lib/bind/db.{{ domaine_dns }}" }
+  notify: recharger bind
+- name: Configuration Kea (DHCP4)
+  template: { src: kea-dhcp4.conf.j2, dest: /etc/kea/kea-dhcp4.conf }
+  notify: redemarrer kea
+- name: Demarrer les services
+  systemd: { name: "{{ item }}", enabled: yes, state: started }
+  loop: [ named, kea-dhcp4-server ]
