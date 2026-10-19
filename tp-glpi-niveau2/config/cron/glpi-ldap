@@ -1,0 +1,2 @@
+# Synchronisation quotidienne des comptes AD
+0 2 * * * www-data /usr/bin/php /var/www/glpi/bin/console ldap:synchronize_users --no-interaction >> /var/log/glpi/ldap-sync.log 2>&1

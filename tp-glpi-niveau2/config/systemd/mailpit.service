@@ -1,0 +1,11 @@
+[Unit]
+Description=Mailpit - serveur SMTP de test
+After=network-online.target
+
+[Service]
+User=mailpit
+ExecStart=/usr/local/bin/mailpit --smtp 0.0.0.0:1025 --listen 0.0.0.0:8025 --database /var/lib/mailpit/mailpit.db
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target

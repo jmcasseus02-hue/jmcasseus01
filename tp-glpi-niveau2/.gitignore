@@ -1,0 +1,13 @@
+# Ne jamais publier de secrets ni de binaires lourds
+*.key
+*.pem
+*.pfx
+*.csr
+*.msi
+*.iso
+*.sql
+*.sql.gz
+*.tar.gz
+*.vma*
+*.zst
+.env
