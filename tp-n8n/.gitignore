@@ -1,0 +1,9 @@
+# Secrets
+.env
+*.key
+*.pem
+
+# Données persistantes des conteneurs
+postgresql/
+n8n_data/
+n8n_files/

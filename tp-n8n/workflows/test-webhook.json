@@ -1,0 +1,95 @@
+{
+  "name": "Test webhook",
+  "nodes": [
+    {
+      "parameters": {
+        "path": "test",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.2,
+      "position": [
+        0,
+        0
+      ],
+      "id": "ab8f3032-afbd-4ad3-a2e2-afffbb9603ab",
+      "name": "Webhook",
+      "webhookId": "785b46a2-9a2d-419e-9bef-406d34b40f4e"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "8e8ece6d-b928-4b6f-a23f-f27abf8511f6",
+              "name": "message",
+              "value": "=Bonjour {{ $json.query.nom }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.5,
+      "position": [
+        224,
+        0
+      ],
+      "id": "5d87ec23-8197-4b2b-aa3a-fe84dafc6123",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        448,
+        0
+      ],
+      "id": "2d4db4d2-8d73-489c-9bf7-8b8232f44f5a",
+      "name": "Respond to Webhook"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": true
+  },
+  "versionId": "781874a6-dee8-4cce-8b66-b9862ddb6ded",
+  "meta": {
+    "instanceId": "30acff3ff4f218c91bef768ef25b013668691fa3233a89b7f5c36f5202322b77"
+  },
+  "nodeGroups": [],
+  "id": "UbqsYhu0Pa88YfSY",
+  "tags": []
+}
