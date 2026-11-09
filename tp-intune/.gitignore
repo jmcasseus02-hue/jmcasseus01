@@ -1,0 +1,4 @@
+# Binaires et paquets : on garde les liens de téléchargement, pas les fichiers
+*.msi
+*.exe
+*.intunewin
